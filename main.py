@@ -17,20 +17,20 @@ class GameState:
 
 game_state: GameState = GameState()
 
-def quit():
+def do_quit():
     pygame.quit()
     sys.exit(0)
 
 def main_loop(screen: pygame.Surface, clock: pygame.time.Clock):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            quit()
+            do_quit()
 
         if event.type == pygame.KEYDOWN:
             if event.key in START_STOP_KEYS:
                 game_state.freeze_image = not game_state.freeze_image
             elif event.key == pygame.K_ESCAPE:
-                quit()
+                do_quit()
 
     # Reset fill
     screen.fill("white")
@@ -54,6 +54,8 @@ def ask_and_load_photos() -> bool:
     picture_path = tkinter.filedialog.askdirectory(parent=main_window)
     main_window.destroy()
     pictures.clear()
+    if picture_path == "":  # User didn't select a path
+        sys.exit(0)
     for f in os.listdir(picture_path):
         try:
             pictures.append(pygame.image.load(os.path.join(picture_path, f)))

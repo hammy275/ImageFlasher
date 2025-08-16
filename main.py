@@ -43,6 +43,7 @@ def main_loop(screen: pygame.Surface, clock: pygame.time.Clock):
 
     pic = pygame.transform.scale(pictures[game_state.picture_index], screen.get_size())
     screen.blit(pic, pic.get_rect())
+    pygame.display.set_icon(pic)
 
     pygame.display.flip()
 
@@ -66,6 +67,7 @@ def ask_and_load_photos() -> bool:
 def main():
     pygame.init()
     screen = pygame.display.set_mode((1280, 720), flags=pygame.RESIZABLE)
+    pygame.display.set_caption("Image Flasher")
     clock = pygame.time.Clock()
 
     while not ask_and_load_photos():

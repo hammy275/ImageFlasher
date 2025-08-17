@@ -8,7 +8,7 @@ PICTURE_CHANGES_PER_SECOND: int = 20
 START_STOP_KEYS: list[int] = [pygame.K_SPACE, pygame.K_RETURN, pygame.K_KP_ENTER]
 
 # Data from settings
-pictures = []
+pictures: list[pygame.Surface] = []
 
 # Game state
 class GameState:
@@ -33,7 +33,7 @@ def main_loop(screen: pygame.Surface, clock: pygame.time.Clock):
                 do_quit()
 
     # Reset fill
-    screen.fill("white")
+    screen.fill("black")
 
     # Actual game loop
     if not game_state.freeze_image:
@@ -41,8 +41,16 @@ def main_loop(screen: pygame.Surface, clock: pygame.time.Clock):
         if game_state.picture_index == len(pictures):
             game_state.picture_index = 0
 
-    pic = pygame.transform.scale(pictures[game_state.picture_index], screen.get_size())
-    screen.blit(pic, pic.get_rect())
+    pic = pictures[game_state.picture_index]
+
+    # Resize to best fit on screen without losing image ratio
+    width_ratio = screen.get_width() / pic.get_width()
+    height_ratio = screen.get_height() / pic.get_height()
+    pic = pygame.transform.scale_by(pic, min(width_ratio, height_ratio))
+
+    x = int(screen.get_width() / 2 - pic.get_width() / 2)
+    y = int(screen.get_height() / 2 - pic.get_height() / 2)
+    screen.blit(pic, (x, y))
     pygame.display.set_icon(pic)
 
     pygame.display.flip()
